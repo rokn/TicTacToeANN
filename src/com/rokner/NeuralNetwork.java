@@ -12,6 +12,7 @@ public class NeuralNetwork {
 
     private Neuron neurons[][];
     private int layers;
+    private int fitness;
 
 
     public NeuralNetwork(List<Integer> topology) {
@@ -66,5 +67,13 @@ public class NeuralNetwork {
                 neurons[i][j].setWeights(newWeights.subList(from, to));
             }
         }
+    }
+
+    public int getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(int fitness) {
+        this.fitness = fitness;
     }
 }

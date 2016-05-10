@@ -11,20 +11,14 @@ public class Main {
         topology.add(10);
         topology.add(9);
 
-
-//        List<Double> we = net.getAllWeights();
-//        System.out.println(we.size());
-//        net.setAllWeights(we);
-//        we = net.getAllWeights();
-
-        DiferentialEvolution learningAlgo = new DiferentialEvolution(4, topology);
+        DifferentialEvolution learningAlgo = new DifferentialEvolution(20, topology);
         NeuralNetwork best = learningAlgo.evolve(1000);
 
         int wins = 0;
         try {
             for (int i = 0; i < 100; i++) {
                 NeuralNetwork net = new NeuralNetwork(topology);
-                Game testGame = new Game(best, net, false);
+                Game testGame = new Game(best, net, true);
                 NeuralNetwork winner = testGame.play();
 
                 if(winner == best){

@@ -7,16 +7,16 @@ import java.util.Random;
 /**
  * Created by amind on 5/10/2016.
  */
-public class DiferentialEvolution {
-    private final double EvoRate = 0.85;
-    private final double CrossoverRate = 0.15;
+public class DifferentialEvolution {
+    private final double EvoRate = 2;
+    private final double CrossoverRate = 0.8;
 
     private List<NeuralNetwork> population;
     int populationSize;
     List<Integer> topology;
     Random rand;
 
-    public DiferentialEvolution(int populationSize, List<Integer> topology) {
+    public DifferentialEvolution(int populationSize, List<Integer> topology) {
         population = new ArrayList<>(populationSize);
         this.populationSize = populationSize;
         this.topology = topology;
@@ -60,11 +60,12 @@ public class DiferentialEvolution {
 
                 newCandidate.setAllWeights(currGenes);
 
-                int oldFitness = getFitness(population.get(i), 20);
-                int newFitness = getFitness(newCandidate, 20);
+                int oldFitness = population.get(i).getFitness();
+                int newFitness = getFitness(newCandidate, 20, false);
 
                 if(oldFitness <= newFitness){
                     population.get(i).setAllWeights(currGenes);
+                    population.get(i).setFitness(newFitness);
                 }
             }
 
@@ -75,7 +76,7 @@ public class DiferentialEvolution {
         int maxFitness = -100000;
 
         for (int i = 0; i < populationSize; i++) {
-            int fitness = getFitness(population.get(i), 50);
+            int fitness = getFitness(population.get(i), 50, false);
             if(fitness > maxFitness){
                 maxIndex = i;
                 maxFitness = fitness;
@@ -86,13 +87,18 @@ public class DiferentialEvolution {
     }
 
     public void reset(){
+        population.clear();
         for (int i = 0; i < populationSize; i++) {
-            population.add(new NeuralNetwork(topology));
+            NeuralNetwork net = new NeuralNetwork(topology);
+            net.setFitness(getFitness(net, 20, true));
+            population.add(net);
         }
     }
 
-    private int getFitness(NeuralNetwork net, int testTries){
-        NeuralNetwork dummy = population.get(rand.nextInt(populationSize));
+    private int getFitness(NeuralNetwork net, int testTries, boolean dummyNet){
+        NeuralNetwork dummy = (dummyNet) ?
+                  new NeuralNetwork(topology)
+                : population.get(rand.nextInt(populationSize));
         Game game1 = new Game(net, dummy, false);
         Game game2 = new Game(dummy, net, false);
 
