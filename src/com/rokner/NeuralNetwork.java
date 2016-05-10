@@ -42,4 +42,29 @@ public class NeuralNetwork {
 
         return inputs;
     }
+
+    public List<Double> getAllWeights(){
+        List<Double> weights = new ArrayList<>();
+
+        for (int i = 0; i < layers; i++) {
+            for (int j = 0; j < neurons[i].length; j++) {
+                weights.addAll(neurons[i][j].getWeights());
+            }
+        }
+
+        return weights;
+    }
+
+    public void setAllWeights(List<Double> newWeights){
+        int from;
+        int to = 0;
+
+        for (int i = 0; i < layers; i++) {
+            for (int j = 0; j < neurons[i].length; j++) {
+                from = to;
+                to += neurons[i][j].getWeightsCount();
+                neurons[i][j].setWeights(newWeights.subList(from, to));
+            }
+        }
+    }
 }

@@ -11,37 +11,37 @@ public class Main {
         topology.add(10);
         topology.add(9);
 
-        List<Double> inputs = new ArrayList<>();
 
-        inputs.add(1.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
-        inputs.add(0.0);
+//        List<Double> we = net.getAllWeights();
+//        System.out.println(we.size());
+//        net.setAllWeights(we);
+//        we = net.getAllWeights();
 
-        NeuralNetwork net = new NeuralNetwork(topology);
+        DiferentialEvolution learningAlgo = new DiferentialEvolution(4, topology);
+        NeuralNetwork best = learningAlgo.evolve(1000);
 
+        int wins = 0;
         try {
-            inputs = net.process(inputs);
-            System.out.println(inputs.get(getMaxIndex(inputs)));
+            for (int i = 0; i < 100; i++) {
+                NeuralNetwork net = new NeuralNetwork(topology);
+                Game testGame = new Game(best, net, false);
+                NeuralNetwork winner = testGame.play();
+
+                if(winner == best){
+                    wins++;
+                }
+
+                Game testGame2 = new Game(net, best, false);
+                winner = testGame2.play();
+
+                if(winner == best){
+                    wins++;
+                }
+            }
         } catch (InvalidInputsException e) {
             e.printStackTrace();
         }
-    }
 
-    private static int getMaxIndex(List<Double> list){
-        int maxIndex = 0;
-
-        for (int i = 0; i < list.size(); i++) {
-            if(list.get(maxIndex) < list.get(i)){
-                maxIndex = i;
-            }
-        }
-
-        return maxIndex;
+        System.out.println(wins);
     }
 }

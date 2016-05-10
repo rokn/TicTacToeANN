@@ -37,6 +37,18 @@ public class Neuron {
         return sigmoid(sum);
     }
 
+    public List<Double> getWeights(){
+        return weights;
+    }
+
+    public void setWeights(List<Double> newWeights){
+        weights = newWeights;
+    }
+
+    public int getWeightsCount(){
+        return weights.size();
+    }
+
     private static double sigmoid(double input){
         return 1 / (1 + Math.exp(-input));
     }
